@@ -54,7 +54,7 @@
                 const resultElement = document.getElementById('result');
 
                 try {
-                    const reponse = await fetch('/' + operation, {
+                    const response = await fetch('/' + operation, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ a: a, b: b })
