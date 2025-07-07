@@ -25,3 +25,11 @@ Run the application
 ```
 uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 ```
+
+API Example
+
+![image](images/calculator.png)
+
+Github Action Workflow
+
+![image](images/workflow.png)
