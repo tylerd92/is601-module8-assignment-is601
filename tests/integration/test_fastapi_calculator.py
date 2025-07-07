@@ -1,4 +1,5 @@
 import pytest
+import logging
 from fastapi.testclient import TestClient
 from main import app
 
@@ -44,3 +45,17 @@ def test_divide_by_zero_api(client):
 
     assert "Cannot divide by zero!" in response.json()['error'], \
         f"Expected error message 'Cannot divide by zero!', got '{response.json()['error']}'"
+    
+def test_logging(client, caplog):
+    # Set logging level to capture INFO logs
+    caplog.set_level(logging.INFO)
+    
+    response = client.post('/add', json={'a': 10, 'b': 5})
+
+    assert response.status_code == 200, f"Expected status code 200, got {response.status_code}"
+
+    assert "10 + 5" in caplog.text, "Log does not contain expected message for addition"
+
+    response = client.post('/subtract', json={'a': 10, 'b': 5})
+
+    assert "10 - 5" in caplog.text, "Log does not contain expected message for subtraction"

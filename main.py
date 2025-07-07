@@ -7,7 +7,8 @@ from app.operations import add, subtract, multiply, divide
 import uvicorn
 import logging
 
-logging.basicConfig(level=logging.INFO)
+# Configure logging to work with pytest caplog
+logging.basicConfig(level=logging.INFO, format='%(levelname)s - %(name)s - %(message)s')
 logger = logging.getLogger(__name__)
 
 app = FastAPI()
@@ -55,7 +56,10 @@ async def read_root(request: Request):
 async def add_route(operation: OperationRequest):
     try:
         result = add(operation.a, operation.b)
-        logger.info(f"{operation.a} + {operation.b} = {result}")
+        # Format numbers as integers if they are whole numbers
+        a_display = int(operation.a) if operation.a.is_integer() else operation.a
+        b_display = int(operation.b) if operation.b.is_integer() else operation.b
+        logger.info(f"{a_display} + {b_display} = {result}")
         return OperationResponse(result=result)
     except Exception as e:
         logger.error(f"Add Operation Error: {str(e)}")
@@ -65,7 +69,10 @@ async def add_route(operation: OperationRequest):
 async def subtract_route(operation: OperationRequest):
     try:
         result = subtract(operation.a, operation.b)
-        logger.info(f"{operation.a} - {operation.b} = {result}")
+        # Format numbers as integers if they are whole numbers
+        a_display = int(operation.a) if operation.a.is_integer() else operation.a
+        b_display = int(operation.b) if operation.b.is_integer() else operation.b
+        logger.info(f"{a_display} - {b_display} = {result}")
         return OperationResponse(result=result)
     except Exception as e:
         logger.error(f"Subtract Operation Error: {str(e)}")
@@ -75,17 +82,23 @@ async def subtract_route(operation: OperationRequest):
 async def multiply_route(operation: OperationRequest):
     try:
         result = multiply(operation.a, operation.b)
-        logger.info(f"{operation.a} * {operation.b} = {result}")
+        # Format numbers as integers if they are whole numbers
+        a_display = int(operation.a) if operation.a.is_integer() else operation.a
+        b_display = int(operation.b) if operation.b.is_integer() else operation.b
+        logger.info(f"{a_display} * {b_display} = {result}")
         return OperationResponse(result=result)
     except Exception as e:
-        logger.error(f"Subtract Operation Error: {str(e)}")
+        logger.error(f"Multiply Operation Error: {str(e)}")
         raise HTTPException(status_code=400, detail=str(e))
     
 @app.post("/divide", response_model=OperationResponse, responses={400: {"model": ErrorResponse}})
 async def divide_route(operation: OperationRequest):
     try:
         result = divide(operation.a, operation.b)
-        logger.info(f"{operation.a} / {operation.b} = {result}")
+        # Format numbers as integers if they are whole numbers
+        a_display = int(operation.a) if operation.a.is_integer() else operation.a
+        b_display = int(operation.b) if operation.b.is_integer() else operation.b
+        logger.info(f"{a_display} / {b_display} = {result}")
         return OperationResponse(result=result)
     except ValueError as e:
         logger.error(f"Divide Operation Error: {str(e)}")
